@@ -55,12 +55,13 @@ final class TickPlayer {
         player.scheduleBuffer(buffer, completionHandler: nil)
     }
 
-    /// Plays a bell chime. `double` queues it twice (used for the hour) so an
-    /// hour change sounds clearly different from a minute change.
-    func playChime(double: Bool) {
+    /// Plays a bell chime `times` in a row (queued sequentially), so a minute
+    /// (1), hour (2) and interval nudge (3) each sound distinct.
+    func playChime(times: Int = 1) {
         guard ready, engine.isRunning, let chimeBuffer else { return }
-        player.scheduleBuffer(chimeBuffer, completionHandler: nil)
-        if double { player.scheduleBuffer(chimeBuffer, completionHandler: nil) }
+        for _ in 0..<max(1, times) {
+            player.scheduleBuffer(chimeBuffer, completionHandler: nil)
+        }
     }
 
     /// Builds a bell-like chime: fundamental plus quieter harmonics, with a

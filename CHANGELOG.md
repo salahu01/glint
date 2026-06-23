@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- **Interval nudges** — choose 15 / 25 / 30 / 60 minutes from the menu-bar
+  *Nudge Me Every* submenu. Glint blinks (violet→cyan) and triple-chimes at
+  each wall-clock mark as a deliberate "time check / take a break" cue.
+
 ## [1.0.0] - 2026-06-23
 
 First public release. 🎉

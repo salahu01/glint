@@ -60,6 +60,22 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         statusItem.button?.image = NSImage(systemSymbolName: "clock", accessibilityDescription: "Glint")
 
         let menu = NSMenu()
+
+        // "Nudge Me Every" submenu — the core time-awareness control.
+        let nudgeItem = NSMenuItem(title: "Nudge Me Every", action: nil, keyEquivalent: "")
+        let nudgeMenu = NSMenu()
+        for minutes in [0, 15, 25, 30, 60] {
+            let title = minutes == 0 ? "Off" : "\(minutes) min"
+            let item = NSMenuItem(title: title, action: #selector(setNudgeInterval(_:)), keyEquivalent: "")
+            item.target = self
+            item.tag = minutes
+            item.state = minutes == model.nudgeInterval ? .on : .off
+            nudgeMenu.addItem(item)
+        }
+        nudgeItem.submenu = nudgeMenu
+        menu.addItem(nudgeItem)
+        menu.addItem(.separator())
+
         muteMenuItem = NSMenuItem(title: "Mute Ticking", action: #selector(toggleMute), keyEquivalent: "m")
         muteMenuItem.target = self
         menu.addItem(muteMenuItem)
@@ -68,6 +84,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         quit.target = self
         menu.addItem(quit)
         statusItem.menu = menu
+    }
+
+    @objc private func setNudgeInterval(_ sender: NSMenuItem) {
+        model.nudgeInterval = sender.tag
+        // Refresh the radio-style checkmarks.
+        sender.menu?.items.forEach { $0.state = ($0.tag == sender.tag) ? .on : .off }
     }
 
     @objc private func toggleMute() {
@@ -104,12 +126,20 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         lastHour = hour
         lastMinute = minute
 
-        if hourRolled {
+        // Interval nudge takes precedence — it's the deliberate "time check".
+        let isNudge = minuteRolled
+            && model.nudgeInterval > 0
+            && minute % model.nudgeInterval == 0
+
+        if isNudge {
+            model.nudgeTick += 1
+            if !model.muted { ticker.playChime(times: 3) }
+        } else if hourRolled {
             model.hourTick += 1
-            if !model.muted { ticker.playChime(double: true) }
+            if !model.muted { ticker.playChime(times: 2) }
         } else if minuteRolled {
             model.minuteTick += 1
-            if !model.muted { ticker.playChime(double: false) }
+            if !model.muted { ticker.playChime(times: 1) }
         } else if !model.muted {
             ticker.play(forSecond: second)   // ordinary tick/tock
         }

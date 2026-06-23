@@ -55,6 +55,9 @@ control of your day instead of losing it.
   audio files bundled.
 - 🎨 **Attention palette** — high-contrast indigo base with cyan glow, escalating
   to red as a change approaches and a bold flash at the change.
+- ⏰ **Interval nudges** — pick 15 / 25 / 30 / 60 min and Glint blinks + triple-
+  chimes at each mark: a deliberate "time check / take a break" tap on the
+  shoulder, the heart of staying aware of your day.
 - 🖐️ **Drag anywhere** — grab it and move it to any corner.
 - 🔇 **One-click mute** & quit from the menu-bar item.
 - 🪶 **Tiny & native** — pure Swift / AppKit / SwiftUI, no dependencies, no Dock
@@ -68,6 +71,7 @@ control of your day instead of losing it.
 | **Buildup** | `:50`–`:59` | Amber→red wash fades in, glow reddens, border brightens | tick / tock |
 | **Minute** | minute rolls over | Teal→cyan **burst flash** | single chime |
 | **Hour** | hour rolls over | Orange→magenta **burst flash** (bigger, longer) | double chime |
+| **Nudge** | your chosen interval | Violet→cyan **blink** (pulses several times) | triple chime |
 
 ## Install
 
@@ -102,6 +106,7 @@ in the menu bar**:
 | Action | How |
 |--------|-----|
 | Move the clock | Drag it anywhere on screen |
+| Set a time-check nudge | Menu-bar clock icon → *Nudge Me Every* → 15 / 25 / 30 / 60 min |
 | Mute / unmute ticking | Menu-bar clock icon → *Mute Ticking* (⌘M) |
 | Quit | Menu-bar clock icon → *Quit Glint* (⌘Q) |
 
@@ -136,6 +141,10 @@ make-app.sh          Bundles & ad-hoc signs Glint.app
 ## Roadmap
 
 - [x] App icon
+- [x] Interval nudges (time-check every N minutes)
+- [ ] Pomodoro / focus blocks with a visual countdown
+- [ ] "Elapsed since you sat down" indicator
+- [ ] Quiet hours — auto-mute during meetings / calls
 - [ ] Preferences: colors, sizes, 24-hour mode, flash intensity
 - [ ] Launch-at-login toggle in the menu
 - [ ] Notarized, signed release build

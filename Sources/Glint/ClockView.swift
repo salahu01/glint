@@ -43,6 +43,10 @@ struct ClockView: View {
         colors: [Color(hex: 0xFB5607), Color(hex: 0xFF006E)],
         startPoint: .topLeading, endPoint: .bottomTrailing
     )
+    private static let nudgeFlash = LinearGradient(
+        colors: [Color(hex: 0x7B2FF7), Color(hex: 0x00F5D4)],
+        startPoint: .topLeading, endPoint: .bottomTrailing
+    )
     private static let glowCyan = Color(hex: 0x00F5D4)
     private static let glowRed = Color(hex: 0xFF1744)
 
@@ -109,7 +113,20 @@ struct ClockView: View {
         .onChange(of: model.hourTick) { _ in
             flash(Self.hourFlash, peak: 0.95, duration: 1.4)
         }
+        .onChange(of: model.nudgeTick) { _ in
+            nudge()
+        }
         .help(model.muted ? "Click to unmute ticking" : "Click to mute ticking")
+    }
+
+    /// Interval-nudge blink: pulse the whole card several times so a scheduled
+    /// time-check is impossible to miss. Even repeat count settles back at 0.
+    private func nudge() {
+        flashGradient = Self.nudgeFlash
+        flashOpacity = 0
+        withAnimation(.easeInOut(duration: 0.22).repeatCount(6, autoreverses: true)) {
+            flashOpacity = 0.95
+        }
     }
 
     /// Snap the flash overlay to full color, then fade it back to transparent.
