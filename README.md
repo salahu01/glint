@@ -1,5 +1,7 @@
 <div align="center">
 
+<img src="Assets/icon.png" width="128" alt="Glint icon" />
+
 # ✨ Glint
 
 ### A glanceable, always-on-top clock that *glints* when time changes.
@@ -9,9 +11,10 @@ your clock. It ticks like a real mechanical clock and **flashes in bold color
 the moment a minute or hour changes**, so you actually notice time passing
 instead of losing track of it.
 
+![CI](https://img.shields.io/github/actions/workflow/status/salahu01/glint/ci.yml?branch=master&style=flat-square&label=build)
 ![Platform](https://img.shields.io/badge/platform-macOS%2013%2B-1A1A2E?style=flat-square)
 ![Swift](https://img.shields.io/badge/Swift-6-FB5607?style=flat-square)
-![Release](https://img.shields.io/github/v/release/salahu01/floating-clock?style=flat-square&color=00F5D4)
+![Release](https://img.shields.io/github/v/release/salahu01/glint?style=flat-square&color=00F5D4)
 ![License](https://img.shields.io/badge/license-MIT-2EC4B6?style=flat-square)
 
 </div>
@@ -59,7 +62,7 @@ You feel time moving, even when you're not staring at it.
 
 ### Download (recommended)
 
-1. Grab `Glint.app.zip` from the [latest release](https://github.com/salahu01/floating-clock/releases/latest).
+1. Grab `Glint.app.zip` from the [latest release](https://github.com/salahu01/glint/releases/latest).
 2. Unzip, drag **Glint.app** to `/Applications`.
 3. First launch: right-click → **Open** (it's ad-hoc signed, so Gatekeeper
    asks once).
@@ -67,8 +70,8 @@ You feel time moving, even when you're not staring at it.
 ### Build from source
 
 ```bash
-git clone git@github.com:salahu01/floating-clock.git
-cd floating-clock
+git clone git@github.com:salahu01/glint.git
+cd glint
 
 # Run straight away (dev):
 swift run
@@ -121,7 +124,7 @@ make-app.sh          Bundles & ad-hoc signs Glint.app
 
 ## Roadmap
 
-- [ ] App icon
+- [x] App icon
 - [ ] Preferences: colors, sizes, 24-hour mode, flash intensity
 - [ ] Launch-at-login toggle in the menu
 - [ ] Notarized, signed release build

@@ -28,5 +28,5 @@ First public release. 🎉
 - Launcher / app icon.
 - `make-app.sh` to build and ad-hoc sign a double-clickable `Glint.app`.
 
-[Unreleased]: https://github.com/salahu01/floating-clock/compare/v1.0.0...HEAD
-[1.0.0]: https://github.com/salahu01/floating-clock/releases/tag/v1.0.0
+[Unreleased]: https://github.com/salahu01/glint/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/salahu01/glint/releases/tag/v1.0.0
