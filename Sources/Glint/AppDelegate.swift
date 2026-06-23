@@ -156,6 +156,19 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         let intensityItem = NSMenuItem(title: "Flash Intensity", action: nil, keyEquivalent: "")
         intensityItem.submenu = intensityMenu
         menu.addItem(intensityItem)
+
+        // Color theme submenu.
+        let themeMenu = NSMenu()
+        for (i, t) in clockThemes.enumerated() {
+            let it = NSMenuItem(title: t.name, action: #selector(setTheme(_:)), keyEquivalent: "")
+            it.target = self
+            it.tag = i
+            it.state = i == model.themeIndex ? .on : .off
+            themeMenu.addItem(it)
+        }
+        let themeItem = NSMenuItem(title: "Color Theme", action: nil, keyEquivalent: "")
+        themeItem.submenu = themeMenu
+        menu.addItem(themeItem)
         menu.addItem(.separator())
 
         show24Item = item("24-Hour Clock", #selector(toggle24Hour))
@@ -207,6 +220,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
     @objc private func setIntensity(_ sender: NSMenuItem) {
         model.intensity = FlashIntensity(rawValue: sender.tag) ?? .normal
+        sender.menu?.items.forEach { $0.state = ($0.tag == sender.tag) ? .on : .off }
+    }
+
+    @objc private func setTheme(_ sender: NSMenuItem) {
+        model.themeIndex = sender.tag
         sender.menu?.items.forEach { $0.state = ($0.tag == sender.tag) ? .on : .off }
     }
 

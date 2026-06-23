@@ -1,6 +1,24 @@
 import Foundation
 import Combine
 
+/// A color theme: the card's base gradient plus the accent/glow color.
+/// (The change flashes — teal minute, orange hour, violet nudge — stay constant
+/// so their meaning is always recognizable.)
+struct ClockTheme {
+    let name: String
+    let baseTop: UInt
+    let baseBottom: UInt
+    let glow: UInt
+}
+
+let clockThemes: [ClockTheme] = [
+    .init(name: "Indigo",   baseTop: 0x1A1A2E, baseBottom: 0x16213E, glow: 0x00F5D4),
+    .init(name: "Midnight", baseTop: 0x0D1B2A, baseBottom: 0x1B263B, glow: 0xE0AAFF),
+    .init(name: "Forest",   baseTop: 0x1B2A1B, baseBottom: 0x14241C, glow: 0x95D5B2),
+    .init(name: "Slate",    baseTop: 0x2B2D42, baseBottom: 0x1D1E2C, glow: 0x8ECAE6),
+    .init(name: "Crimson",  baseTop: 0x2A0E0E, baseBottom: 0x1A0606, glow: 0xFF6B6B),
+]
+
 /// Clock face size presets.
 enum ClockSize: Int, CaseIterable {
     case small, medium, large
@@ -27,6 +45,9 @@ final class ClockModel: ObservableObject {
     @Published var intensity: FlashIntensity  { didSet { save() } }
     @Published var autoMuteInCalls: Bool      { didSet { save() } }
     @Published var showElapsed: Bool          { didSet { save() } }
+    @Published var themeIndex: Int            { didSet { save() } }
+
+    var theme: ClockTheme { clockThemes[min(max(0, themeIndex), clockThemes.count - 1)] }
 
     // MARK: Animation triggers (view watches these)
     @Published var minuteTick = 0
@@ -61,6 +82,7 @@ final class ClockModel: ObservableObject {
         intensity = FlashIntensity(rawValue: d.object(forKey: "intensity") as? Int ?? FlashIntensity.normal.rawValue) ?? .normal
         autoMuteInCalls = d.bool(forKey: "autoMuteInCalls")
         showElapsed = d.bool(forKey: "showElapsed")
+        themeIndex = d.integer(forKey: "themeIndex")
         loaded = true
         updateElapsed()
     }
@@ -74,6 +96,7 @@ final class ClockModel: ObservableObject {
         defaults.set(intensity.rawValue, forKey: "intensity")
         defaults.set(autoMuteInCalls, forKey: "autoMuteInCalls")
         defaults.set(showElapsed, forKey: "showElapsed")
+        defaults.set(themeIndex, forKey: "themeIndex")
     }
 
     func resetSession() {

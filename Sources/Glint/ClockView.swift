@@ -27,10 +27,6 @@ struct ClockView: View {
     @State private var flashGradient = ClockView.minuteFlash
 
     // Palette
-    private static let baseGradient = LinearGradient(
-        colors: [Color(hex: 0x1A1A2E), Color(hex: 0x16213E)],
-        startPoint: .topLeading, endPoint: .bottomTrailing
-    )
     private static let warnGradient = LinearGradient(
         colors: [Color(hex: 0xFF9F1C), Color(hex: 0xE71D36)],
         startPoint: .topLeading, endPoint: .bottomTrailing
@@ -47,8 +43,14 @@ struct ClockView: View {
         colors: [Color(hex: 0x7B2FF7), Color(hex: 0x00F5D4)],
         startPoint: .topLeading, endPoint: .bottomTrailing
     )
-    private static let glowCyan = Color(hex: 0x00F5D4)
     private static let glowRed = Color(hex: 0xFF1744)
+
+    // Theme-driven palette.
+    private var themeBase: LinearGradient {
+        LinearGradient(colors: [Color(hex: model.theme.baseTop), Color(hex: model.theme.baseBottom)],
+                       startPoint: .topLeading, endPoint: .bottomTrailing)
+    }
+    private var themeGlow: Color { Color(hex: model.theme.glow) }
 
     private static let hourMinute12 = makeFormatter("h:mm")
     private static let hourMinute24 = makeFormatter("H:mm")
@@ -71,7 +73,7 @@ struct ClockView: View {
     }
 
     private var glowColor: Color {
-        anticipation > 0 ? Self.glowRed : Self.glowCyan
+        anticipation > 0 ? Self.glowRed : themeGlow
     }
 
     var body: some View {
@@ -97,7 +99,7 @@ struct ClockView: View {
                     .foregroundStyle(.white.opacity(0.55))
             }
             .font(.system(size: 30 * scale, weight: .bold, design: .rounded))
-            .foregroundStyle(anticipation > 0 ? .white : Self.glowCyan)
+            .foregroundStyle(anticipation > 0 ? .white : themeGlow)
 
             // Focus block countdown (takes priority over the sitting readout).
             if model.focusActive {
@@ -125,7 +127,7 @@ struct ClockView: View {
         .padding(.vertical, 14 * scale)
         // Order matters: warm wash sits in front of the base, behind the text.
         .background(Self.warnGradient.opacity(anticipation * model.intensity.scale), in: shape)
-        .background(Self.baseGradient, in: shape)                       // solid base
+        .background(themeBase, in: shape)                               // themed base
         .overlay(shape.fill(flashGradient).opacity(flashOpacity))       // burst flash
         .overlay(
             shape.strokeBorder(glowColor.opacity(0.4 + anticipation * 0.6),

@@ -65,6 +65,7 @@ control of your day instead of losing it.
 - 📞 **Auto-mute in calls** — silences ticking while your mic is in use, so it
   never leaks into a meeting (no mic permission needed — it only reads device
   state).
+- 🎨 **Color themes** — Indigo, Midnight, Forest, Slate, Crimson.
 - ⚙️ **Preferences** — 24-hour clock, three sizes, three flash intensities; all
   remembered between launches.
 - 🚀 **Launch at login** — one toggle to have Glint always there.
@@ -121,6 +122,7 @@ in the menu bar**:
 | Show / reset "time sitting" | Menu → *Show Time Sitting* · *Reset Session Timer* |
 | 24-hour clock | Menu → *24-Hour Clock* |
 | Size / flash strength | Menu → *Clock Size* · *Flash Intensity* |
+| Color theme | Menu → *Color Theme* → Indigo / Midnight / Forest / Slate / Crimson |
 | Auto-mute during calls | Menu → *Auto-Mute in Calls* |
 | Launch at login | Menu → *Launch at Login* |
 | Mute / unmute ticking | Menu → *Mute Ticking* (⌘M) |
@@ -165,8 +167,12 @@ make-app.sh          Bundles & ad-hoc signs Glint.app
 - [x] Preferences: sizes, 24-hour mode, flash intensity (persisted)
 - [x] Launch-at-login toggle in the menu
 - [x] Pomodoro / focus blocks with a visual countdown
-- [ ] Custom color themes
-- [ ] Notarized, signed release build
+- [x] Custom color themes
+- [x] Notarization tooling (`notarize.sh`) — *needs a paid Apple Developer account to run*
+
+🎉 **Roadmap complete.** The only remaining step, a fully *notarized* release,
+requires an Apple Developer account ($99/yr); the script is ready —
+`SIGN_ID="Developer ID Application: …" ./notarize.sh`.
 
 ## License
 

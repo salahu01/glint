@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.0] - 2026-06-23
+
+### Added
+- **Color themes** — Indigo, Midnight, Forest, Slate and Crimson, chosen from
+  the *Color Theme* menu and remembered between launches. The change flashes
+  stay constant so their meaning is always recognizable.
+- **Notarization tooling** — `notarize.sh` builds, Developer ID-signs,
+  notarizes and staples the app (requires a paid Apple Developer account).
+
 ## [1.2.0] - 2026-06-23
 
 ### Added
@@ -49,7 +58,8 @@ First public release. 🎉
 - Launcher / app icon.
 - `make-app.sh` to build and ad-hoc sign a double-clickable `Glint.app`.
 
-[Unreleased]: https://github.com/salahu01/glint/compare/v1.2.0...HEAD
+[Unreleased]: https://github.com/salahu01/glint/compare/v1.3.0...HEAD
+[1.3.0]: https://github.com/salahu01/glint/releases/tag/v1.3.0
 [1.2.0]: https://github.com/salahu01/glint/releases/tag/v1.2.0
 [1.1.0]: https://github.com/salahu01/glint/releases/tag/v1.1.0
 [1.0.0]: https://github.com/salahu01/glint/releases/tag/v1.0.0
