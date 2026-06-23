@@ -2,14 +2,14 @@
 import PackageDescription
 
 let package = Package(
-    name: "FloatingClock",
+    name: "Glint",
     platforms: [
         .macOS(.v13)
     ],
     targets: [
         .executableTarget(
-            name: "FloatingClock",
-            path: "Sources/FloatingClock"
+            name: "Glint",
+            path: "Sources/Glint"
         )
     ]
 )

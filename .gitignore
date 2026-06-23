@@ -1,5 +1,6 @@
 .build/
-FloatingClock.app/
+*.app/
+*.zip
 .DS_Store
 *.xcodeproj
 .swiftpm/

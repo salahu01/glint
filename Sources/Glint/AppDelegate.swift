@@ -57,14 +57,14 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     private func buildStatusItem() {
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
-        statusItem.button?.image = NSImage(systemSymbolName: "clock", accessibilityDescription: "Floating Clock")
+        statusItem.button?.image = NSImage(systemSymbolName: "clock", accessibilityDescription: "Glint")
 
         let menu = NSMenu()
         muteMenuItem = NSMenuItem(title: "Mute Ticking", action: #selector(toggleMute), keyEquivalent: "m")
         muteMenuItem.target = self
         menu.addItem(muteMenuItem)
         menu.addItem(.separator())
-        let quit = NSMenuItem(title: "Quit Floating Clock", action: #selector(quitApp), keyEquivalent: "q")
+        let quit = NSMenuItem(title: "Quit Glint", action: #selector(quitApp), keyEquivalent: "q")
         quit.target = self
         menu.addItem(quit)
         statusItem.menu = menu
