@@ -4,12 +4,16 @@
 
 # ✨ Glint
 
-### A glanceable, always-on-top clock that *glints* when time changes.
+### An ambient time-awareness clock for people who lose track of time.
 
-Glint floats above every window and every Space — like Picture-in-Picture for
-your clock. It ticks like a real mechanical clock and **flashes in bold color
-the moment a minute or hour changes**, so you actually notice time passing
-instead of losing track of it.
+**Built for the distracted, the hyper-focused, and anyone who looks up and
+realizes hours just vanished.** When you're deep in work — or deep in a
+rabbit hole — time stops *feeling* like it's passing. Glint fixes that.
+
+It floats above every window and every Space (like Picture-in-Picture),
+ticks like a real mechanical clock, and **flashes in bold color the moment a
+minute or hour changes** — so time keeps gently tapping you on the shoulder,
+even when you've forgotten to look.
 
 ![CI](https://img.shields.io/github/actions/workflow/status/salahu01/glint/ci.yml?branch=master&style=flat-square&label=build)
 ![Platform](https://img.shields.io/badge/platform-macOS%2013%2B-1A1A2E?style=flat-square)
@@ -23,15 +27,22 @@ instead of losing track of it.
 
 ## Why Glint?
 
-A normal clock is easy to ignore — you glance, you forget. Glint is built to
-**pull your eye at the right moment**:
+Some of us have no felt sense of time. You sit down to work, blink, and three
+hours are gone — meetings missed, breaks skipped, the day eaten. A normal
+clock doesn't help: it just sits there, easy to ignore. You have to *remember*
+to look, and remembering is exactly the thing you can't do when you're absorbed.
+
+Glint is **ambient time-awareness**. Instead of waiting to be checked, it
+reaches out to you:
 
 - A warm **amber → red wash** builds up over the final 10 seconds of a minute
-  (peripheral-vision warning that a change is coming).
+  (a calm peripheral-vision warning that a change is coming).
 - A **teal burst** flashes the whole card when the minute rolls over.
-- A bigger **orange → magenta burst** + a **double chime** marks every hour.
+- A bigger **orange → magenta burst** + a **double chime** marks every hour —
+  a clear, unmissable "an hour just passed."
 
-You feel time moving, even when you're not staring at it.
+You don't have to look. Glint makes you *feel* time moving — so you stay in
+control of your day instead of losing it.
 
 ## Features
 
