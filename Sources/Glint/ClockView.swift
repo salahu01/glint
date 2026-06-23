@@ -50,7 +50,8 @@ struct ClockView: View {
     private static let glowCyan = Color(hex: 0x00F5D4)
     private static let glowRed = Color(hex: 0xFF1744)
 
-    private static let hourMinuteFormatter = makeFormatter("h:mm")
+    private static let hourMinute12 = makeFormatter("h:mm")
+    private static let hourMinute24 = makeFormatter("H:mm")
     private static let secondsFormatter = makeFormatter("ss")
     private static let periodFormatter = makeFormatter("a")
 
@@ -62,6 +63,7 @@ struct ClockView: View {
     }
 
     private var second: Int { Calendar.current.component(.second, from: model.date) }
+    private var scale: CGFloat { CGFloat(model.size.scale) }
 
     /// 0 until :50, then ramps 0.1 → 1.0 across the final ten seconds.
     private var anticipation: Double {
@@ -77,29 +79,52 @@ struct ClockView: View {
 
         VStack(spacing: 0) {
             // Top: hours and minutes, large.
-            Text(Self.hourMinuteFormatter.string(from: model.date))
-                .font(.system(size: 48, weight: .bold, design: .rounded))
+            Text((model.use24Hour ? Self.hourMinute24 : Self.hourMinute12).string(from: model.date))
+                .font(.system(size: 48 * scale, weight: .bold, design: .rounded))
                 .monospacedDigit()
                 .foregroundStyle(.white)
-                .shadow(color: glowColor.opacity(0.9), radius: 6 + anticipation * 8)
+                .shadow(color: glowColor.opacity(0.9), radius: (6 + anticipation * 8) * scale)
 
-            // Bottom: seconds and AM/PM, smaller, in the accent color.
-            HStack(spacing: 8) {
+            // Bottom: seconds (+ AM/PM in 12-hour), in the accent color.
+            HStack(spacing: 8 * scale) {
                 Text(Self.secondsFormatter.string(from: model.date))
                     .monospacedDigit()
-                Text(Self.periodFormatter.string(from: model.date))
-                Image(systemName: model.muted ? "speaker.slash.fill" : "speaker.wave.2.fill")
-                    .font(.system(size: 13))
+                if !model.use24Hour {
+                    Text(Self.periodFormatter.string(from: model.date))
+                }
+                Image(systemName: model.soundSuppressed ? "speaker.slash.fill" : "speaker.wave.2.fill")
+                    .font(.system(size: 13 * scale))
                     .foregroundStyle(.white.opacity(0.55))
             }
-            .font(.system(size: 30, weight: .bold, design: .rounded))
+            .font(.system(size: 30 * scale, weight: .bold, design: .rounded))
             .foregroundStyle(anticipation > 0 ? .white : Self.glowCyan)
+
+            // Focus block countdown (takes priority over the sitting readout).
+            if model.focusActive {
+                HStack(spacing: 4 * scale) {
+                    Image(systemName: "target")
+                    Text(model.focusRemaining)
+                        .monospacedDigit()
+                }
+                .font(.system(size: 14 * scale, weight: .bold, design: .rounded))
+                .foregroundStyle(Color(hex: 0x7B2FF7))
+                .padding(.top, 2 * scale)
+            } else if model.showElapsed {
+                // Optional: "time sitting" since the session started.
+                HStack(spacing: 4 * scale) {
+                    Image(systemName: "hourglass")
+                    Text(model.elapsedText)
+                }
+                .font(.system(size: 13 * scale, weight: .semibold, design: .rounded))
+                .foregroundStyle(.white.opacity(0.5))
+                .padding(.top, 2 * scale)
+            }
         }
         .fixedSize()
-        .padding(.horizontal, 24)
-        .padding(.vertical, 14)
+        .padding(.horizontal, 24 * scale)
+        .padding(.vertical, 14 * scale)
         // Order matters: warm wash sits in front of the base, behind the text.
-        .background(Self.warnGradient.opacity(anticipation), in: shape) // warm wash (50–59)
+        .background(Self.warnGradient.opacity(anticipation * model.intensity.scale), in: shape)
         .background(Self.baseGradient, in: shape)                       // solid base
         .overlay(shape.fill(flashGradient).opacity(flashOpacity))       // burst flash
         .overlay(
@@ -108,24 +133,27 @@ struct ClockView: View {
         )
         .animation(.easeInOut(duration: 0.3), value: anticipation)
         .onChange(of: model.minuteTick) { _ in
-            flash(Self.minuteFlash, peak: 0.9, duration: 0.8)
+            flash(Self.minuteFlash, peak: 0.9 * model.intensity.scale, duration: 0.8)
         }
         .onChange(of: model.hourTick) { _ in
-            flash(Self.hourFlash, peak: 0.95, duration: 1.4)
+            flash(Self.hourFlash, peak: 0.95 * model.intensity.scale, duration: 1.4)
         }
         .onChange(of: model.nudgeTick) { _ in
-            nudge()
+            nudge(peak: 0.95 * model.intensity.scale)
         }
-        .help(model.muted ? "Click to unmute ticking" : "Click to mute ticking")
+        .onChange(of: model.focusEndedTick) { _ in
+            nudge(peak: max(0.85, model.intensity.scale))
+        }
+        .help(model.soundSuppressed ? "Click to unmute ticking" : "Click to mute ticking")
     }
 
     /// Interval-nudge blink: pulse the whole card several times so a scheduled
     /// time-check is impossible to miss. Even repeat count settles back at 0.
-    private func nudge() {
+    private func nudge(peak: Double) {
         flashGradient = Self.nudgeFlash
         flashOpacity = 0
         withAnimation(.easeInOut(duration: 0.22).repeatCount(6, autoreverses: true)) {
-            flashOpacity = 0.95
+            flashOpacity = peak
         }
     }
 

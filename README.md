@@ -58,6 +58,16 @@ control of your day instead of losing it.
 - ⏰ **Interval nudges** — pick 15 / 25 / 30 / 60 min and Glint blinks + triple-
   chimes at each mark: a deliberate "time check / take a break" tap on the
   shoulder, the heart of staying aware of your day.
+- 🎯 **Focus blocks** — start a 25 or 50 min Pomodoro; a live countdown shows on
+  the face and Glint celebrates with a blink + chime when the block ends.
+- ⏳ **"Time sitting"** — optional readout of how long you've been at it this
+  session, with a one-click reset.
+- 📞 **Auto-mute in calls** — silences ticking while your mic is in use, so it
+  never leaks into a meeting (no mic permission needed — it only reads device
+  state).
+- ⚙️ **Preferences** — 24-hour clock, three sizes, three flash intensities; all
+  remembered between launches.
+- 🚀 **Launch at login** — one toggle to have Glint always there.
 - 🖐️ **Drag anywhere** — grab it and move it to any corner.
 - 🔇 **One-click mute** & quit from the menu-bar item.
 - 🪶 **Tiny & native** — pure Swift / AppKit / SwiftUI, no dependencies, no Dock
@@ -106,9 +116,17 @@ in the menu bar**:
 | Action | How |
 |--------|-----|
 | Move the clock | Drag it anywhere on screen |
-| Set a time-check nudge | Menu-bar clock icon → *Nudge Me Every* → 15 / 25 / 30 / 60 min |
-| Mute / unmute ticking | Menu-bar clock icon → *Mute Ticking* (⌘M) |
-| Quit | Menu-bar clock icon → *Quit Glint* (⌘Q) |
+| Set a time-check nudge | Menu → *Nudge Me Every* → 15 / 25 / 30 / 60 min |
+| Start a focus block | Menu → *Focus Block* → Start 25 / 50 min (countdown on the face) |
+| Show / reset "time sitting" | Menu → *Show Time Sitting* · *Reset Session Timer* |
+| 24-hour clock | Menu → *24-Hour Clock* |
+| Size / flash strength | Menu → *Clock Size* · *Flash Intensity* |
+| Auto-mute during calls | Menu → *Auto-Mute in Calls* |
+| Launch at login | Menu → *Launch at Login* |
+| Mute / unmute ticking | Menu → *Mute Ticking* (⌘M) |
+| Quit | Menu → *Quit Glint* (⌘Q) |
+
+All preferences persist between launches.
 
 Want it on every login? **System Settings → General → Login Items → +** → Glint.
 
@@ -142,11 +160,12 @@ make-app.sh          Bundles & ad-hoc signs Glint.app
 
 - [x] App icon
 - [x] Interval nudges (time-check every N minutes)
-- [ ] Pomodoro / focus blocks with a visual countdown
-- [ ] "Elapsed since you sat down" indicator
-- [ ] Quiet hours — auto-mute during meetings / calls
-- [ ] Preferences: colors, sizes, 24-hour mode, flash intensity
-- [ ] Launch-at-login toggle in the menu
+- [x] "Time sitting" indicator + reset
+- [x] Auto-mute during meetings / calls
+- [x] Preferences: sizes, 24-hour mode, flash intensity (persisted)
+- [x] Launch-at-login toggle in the menu
+- [x] Pomodoro / focus blocks with a visual countdown
+- [ ] Custom color themes
 - [ ] Notarized, signed release build
 
 ## License
