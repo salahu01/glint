@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-06-23
+
 ### Added
 - **Interval nudges** — choose 15 / 25 / 30 / 60 minutes from the menu-bar
   *Nudge Me Every* submenu. Glint blinks (violet→cyan) and triple-chimes at
@@ -33,5 +35,6 @@ First public release. 🎉
 - Launcher / app icon.
 - `make-app.sh` to build and ad-hoc sign a double-clickable `Glint.app`.
 
-[Unreleased]: https://github.com/salahu01/glint/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/salahu01/glint/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/salahu01/glint/releases/tag/v1.1.0
 [1.0.0]: https://github.com/salahu01/glint/releases/tag/v1.0.0
