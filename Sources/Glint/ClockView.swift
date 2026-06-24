@@ -76,50 +76,91 @@ struct ClockView: View {
         anticipation > 0 ? Self.glowRed : themeGlow
     }
 
+    private var minute: Int { Calendar.current.component(.minute, from: model.date) }
+
+    /// Depletion is shown for a focus block, when the user enables it, in Calm
+    /// Mode, or whenever numerals are fully hidden (the visual is then the only
+    /// time cue).
+    private var depletionActive: Bool {
+        model.focusActive || model.showDepletion || model.calmMode
+            || model.numberVisibility == .hideAll
+    }
+
+    private var depletionColor: Color {
+        model.focusActive ? Color(hex: 0x7B2FF7) : themeGlow
+    }
+
+    /// Fraction of time remaining (0…1) for the active depletion context:
+    /// focus block → nudge interval → current hour.
+    private var fractionRemaining: Double {
+        if model.focusActive, let end = model.focusEnd, model.focusTotalSeconds > 0 {
+            return max(0, min(1, end.timeIntervalSince(model.date) / model.focusTotalSeconds))
+        }
+        let s = Double(second), m = Double(minute)
+        if model.nudgeInterval > 0 {
+            let span = Double(model.nudgeInterval) * 60
+            let into = m.truncatingRemainder(dividingBy: Double(model.nudgeInterval)) * 60 + s
+            return max(0, min(1, 1 - into / span))
+        }
+        return max(0, min(1, 1 - (m * 60 + s) / 3600))
+    }
+
     var body: some View {
         let shape = RoundedRectangle(cornerRadius: 20, style: .continuous)
 
         VStack(spacing: 0) {
-            // Top: hours and minutes, large.
-            Text((model.use24Hour ? Self.hourMinute24 : Self.hourMinute12).string(from: model.date))
-                .font(.system(size: 48 * scale, weight: .bold, design: .rounded))
-                .monospacedDigit()
-                .foregroundStyle(.white)
-                .shadow(color: glowColor.opacity(0.9), radius: (6 + anticipation * 8) * scale)
-
-            // Bottom: seconds (+ AM/PM in 12-hour), in the accent color.
-            HStack(spacing: 8 * scale) {
-                Text(Self.secondsFormatter.string(from: model.date))
+            // Top: hours and minutes (hidden only in Hide All).
+            if model.numberVisibility != .hideAll {
+                Text((model.use24Hour ? Self.hourMinute24 : Self.hourMinute12).string(from: model.date))
+                    .font(.system(size: 48 * scale, weight: .bold, design: .rounded))
                     .monospacedDigit()
-                if !model.use24Hour {
-                    Text(Self.periodFormatter.string(from: model.date))
-                }
-                Image(systemName: model.soundSuppressed ? "speaker.slash.fill" : "speaker.wave.2.fill")
-                    .font(.system(size: 13 * scale))
-                    .foregroundStyle(.white.opacity(0.55))
+                    .foregroundStyle(.white)
+                    .shadow(color: glowColor.opacity(0.9), radius: (6 + anticipation * 8) * scale)
             }
-            .font(.system(size: 30 * scale, weight: .bold, design: .rounded))
-            .foregroundStyle(anticipation > 0 ? .white : themeGlow)
 
-            // Focus block countdown (takes priority over the sitting readout).
-            if model.focusActive {
-                HStack(spacing: 4 * scale) {
-                    Image(systemName: "target")
-                    Text(model.focusRemaining)
+            // Bottom: seconds (+ AM/PM in 12-hour) — only in Full.
+            if model.numberVisibility == .full {
+                HStack(spacing: 8 * scale) {
+                    Text(Self.secondsFormatter.string(from: model.date))
                         .monospacedDigit()
+                    if !model.use24Hour {
+                        Text(Self.periodFormatter.string(from: model.date))
+                    }
+                    Image(systemName: model.soundSuppressed ? "speaker.slash.fill" : "speaker.wave.2.fill")
+                        .font(.system(size: 13 * scale))
+                        .foregroundStyle(.white.opacity(0.55))
                 }
-                .font(.system(size: 14 * scale, weight: .bold, design: .rounded))
-                .foregroundStyle(Color(hex: 0x7B2FF7))
-                .padding(.top, 2 * scale)
-            } else if model.showElapsed {
-                // Optional: "time sitting" since the session started.
-                HStack(spacing: 4 * scale) {
-                    Image(systemName: "hourglass")
-                    Text(model.elapsedText)
+                .font(.system(size: 30 * scale, weight: .bold, design: .rounded))
+                .foregroundStyle(anticipation > 0 ? .white : themeGlow)
+            }
+
+            // Focus countdown / "time sitting" digits — only in Full.
+            if model.numberVisibility == .full {
+                if model.focusActive {
+                    HStack(spacing: 4 * scale) {
+                        Image(systemName: "target")
+                        Text(model.focusRemaining).monospacedDigit()
+                    }
+                    .font(.system(size: 14 * scale, weight: .bold, design: .rounded))
+                    .foregroundStyle(Color(hex: 0x7B2FF7))
+                    .padding(.top, 2 * scale)
+                } else if model.showElapsed {
+                    HStack(spacing: 4 * scale) {
+                        Image(systemName: "hourglass")
+                        Text(model.elapsedText)
+                    }
+                    .font(.system(size: 13 * scale, weight: .semibold, design: .rounded))
+                    .foregroundStyle(.white.opacity(0.5))
+                    .padding(.top, 2 * scale)
                 }
-                .font(.system(size: 13 * scale, weight: .semibold, design: .rounded))
-                .foregroundStyle(.white.opacity(0.5))
-                .padding(.top, 2 * scale)
+            }
+
+            // Disk depletion, or a sizing placeholder when all numerals are hidden.
+            if depletionActive && model.depletionStyle == .disk {
+                TimerDisk(fraction: fractionRemaining, color: depletionColor, diameter: 76 * scale)
+                    .padding(.top, model.numberVisibility == .hideAll ? 0 : 6 * scale)
+            } else if model.numberVisibility == .hideAll {
+                Color.clear.frame(width: 104 * scale, height: 58 * scale)
             }
         }
         .fixedSize()
@@ -133,18 +174,28 @@ struct ClockView: View {
             shape.strokeBorder(glowColor.opacity(0.4 + anticipation * 0.6),
                                lineWidth: 1.5)
         )
+        // Perimeter-ring depletion (idea 1+2).
+        .overlay {
+            if depletionActive && model.depletionStyle == .ring {
+                TimerRing(fraction: fractionRemaining,
+                          color: depletionColor,
+                          lineWidth: (model.focusActive ? 4 : 2.5) * scale,
+                          cornerRadius: 20)
+            }
+        }
         .animation(.easeInOut(duration: 0.3), value: anticipation)
+        // Calm Mode suppresses the alarm bursts — depletion + wash carry the cue.
         .onChange(of: model.minuteTick) { _ in
-            flash(Self.minuteFlash, peak: 0.9 * model.intensity.scale, duration: 0.8)
+            if !model.calmMode { flash(Self.minuteFlash, peak: 0.9 * model.intensity.scale, duration: 0.8) }
         }
         .onChange(of: model.hourTick) { _ in
-            flash(Self.hourFlash, peak: 0.95 * model.intensity.scale, duration: 1.4)
+            if !model.calmMode { flash(Self.hourFlash, peak: 0.95 * model.intensity.scale, duration: 1.4) }
         }
         .onChange(of: model.nudgeTick) { _ in
-            nudge(peak: 0.95 * model.intensity.scale)
+            if !model.calmMode { nudge(peak: 0.95 * model.intensity.scale) }
         }
         .onChange(of: model.focusEndedTick) { _ in
-            nudge(peak: max(0.85, model.intensity.scale))
+            nudge(peak: model.calmMode ? 0.4 : max(0.85, model.intensity.scale))
         }
         .help(model.soundSuppressed ? "Click to unmute ticking" : "Click to mute ticking")
     }

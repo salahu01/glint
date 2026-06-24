@@ -44,6 +44,11 @@ reaches out to you:
 You don't have to look. Glint makes you *feel* time moving — so you stay in
 control of your day instead of losing it.
 
+And inspired by [Time Timer's research](https://www.timetimer.com/pages/research)
+— which finds that a *visual, number-free* depiction of remaining time improves
+self-regulation and lowers anxiety — Glint can show time as a **shrinking ring
+or disk** you simply watch empty, no digits to decode.
+
 ## Features
 
 - 🪟 **Always on top, every Space** — borderless floating panel, rides over
@@ -65,6 +70,13 @@ control of your day instead of losing it.
 - 📞 **Auto-mute in calls** — silences ticking while your mic is in use, so it
   never leaks into a meeting (no mic permission needed — it only reads device
   state).
+- ⏲️ **Visual time depletion** — a shrinking **ring** around the card or a Time
+  Timer-style **disk** that empties over your focus block, nudge interval, or
+  the hour. You *see* time run out instead of reading digits.
+- 🔢 **Number-display modes** — Full, Hide Seconds, or Hide All (pure visual,
+  number-free — easiest to *feel* for time-blind users).
+- 🧘 **Calm Mode** — swaps the alarm-style bursts for gentle depletion, to lower
+  anxiety while still keeping you aware.
 - 🎨 **Color themes** — Indigo, Midnight, Forest, Slate, Crimson.
 - ⚙️ **Preferences** — 24-hour clock, three sizes, three flash intensities; all
   remembered between launches.
@@ -123,6 +135,10 @@ in the menu bar**:
 | 24-hour clock | Menu → *24-Hour Clock* |
 | Size / flash strength | Menu → *Clock Size* · *Flash Intensity* |
 | Color theme | Menu → *Color Theme* → Indigo / Midnight / Forest / Slate / Crimson |
+| Show visual depletion | Menu → *Show Time Depletion* |
+| Depletion shape | Menu → *Depletion Style* → Ring / Disk |
+| Hide numerals | Menu → *Number Display* → Full / Hide Seconds / Hide All |
+| Calm (low-anxiety) mode | Menu → *Calm Mode* |
 | Auto-mute during calls | Menu → *Auto-Mute in Calls* |
 | Launch at login | Menu → *Launch at Login* |
 | Mute / unmute ticking | Menu → *Mute Ticking* (⌘M) |
@@ -168,6 +184,7 @@ make-app.sh          Bundles & ad-hoc signs Glint.app
 - [x] Launch-at-login toggle in the menu
 - [x] Pomodoro / focus blocks with a visual countdown
 - [x] Custom color themes
+- [x] Visual time depletion — ring / disk, number-free modes, Calm Mode (Time Timer-inspired)
 - [x] Notarization tooling (`notarize.sh`) — *needs a paid Apple Developer account to run*
 
 🎉 **Roadmap complete.** The only remaining step, a fully *notarized* release,

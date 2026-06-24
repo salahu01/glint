@@ -20,6 +20,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     private var loginItem: NSMenuItem!
     private var show24Item: NSMenuItem!
     private var showElapsedItem: NSMenuItem!
+    private var showDepletionItem: NSMenuItem!
+    private var calmItem: NSMenuItem!
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         buildPanel()
@@ -65,11 +67,16 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     /// When a preference changes the face's footprint, resize the panel while
     /// keeping its top-right corner pinned.
     private func observeLayoutChanges() {
-        let focusToggle = model.$focusEnd.map { $0 != nil }.removeDuplicates().map { _ in () }
-        model.$size.map { _ in () }
-            .merge(with: model.$use24Hour.map { _ in () },
-                   model.$showElapsed.map { _ in () },
-                   focusToggle)
+        let triggers: [AnyPublisher<Void, Never>] = [
+            model.$size.map { _ in () }.eraseToAnyPublisher(),
+            model.$use24Hour.map { _ in () }.eraseToAnyPublisher(),
+            model.$showElapsed.map { _ in () }.eraseToAnyPublisher(),
+            model.$numberVisibilityRaw.map { _ in () }.eraseToAnyPublisher(),
+            model.$depletionStyleRaw.map { _ in () }.eraseToAnyPublisher(),
+            model.$showDepletion.map { _ in () }.eraseToAnyPublisher(),
+            model.$focusEnd.map { $0 != nil }.removeDuplicates().map { _ in () }.eraseToAnyPublisher(),
+        ]
+        Publishers.MergeMany(triggers)
             .sink { [weak self] in
                 DispatchQueue.main.async { self?.relayoutPanel() }
             }
@@ -171,6 +178,38 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         menu.addItem(themeItem)
         menu.addItem(.separator())
 
+        // Visual time depletion (Time Timer style).
+        showDepletionItem = item("Show Time Depletion", #selector(toggleDepletion))
+        menu.addItem(showDepletionItem)
+
+        let styleMenu = NSMenu()
+        for ds in DepletionStyle.allCases {
+            let it = NSMenuItem(title: ds.label, action: #selector(setDepletionStyle(_:)), keyEquivalent: "")
+            it.target = self
+            it.tag = ds.rawValue
+            it.state = ds == model.depletionStyle ? .on : .off
+            styleMenu.addItem(it)
+        }
+        let styleItem = NSMenuItem(title: "Depletion Style", action: nil, keyEquivalent: "")
+        styleItem.submenu = styleMenu
+        menu.addItem(styleItem)
+
+        let numberMenu = NSMenu()
+        for nv in NumberVisibility.allCases {
+            let it = NSMenuItem(title: nv.label, action: #selector(setNumberVisibility(_:)), keyEquivalent: "")
+            it.target = self
+            it.tag = nv.rawValue
+            it.state = nv == model.numberVisibility ? .on : .off
+            numberMenu.addItem(it)
+        }
+        let numberItem = NSMenuItem(title: "Number Display", action: nil, keyEquivalent: "")
+        numberItem.submenu = numberMenu
+        menu.addItem(numberItem)
+
+        calmItem = item("Calm Mode", #selector(toggleCalm))
+        menu.addItem(calmItem)
+        menu.addItem(.separator())
+
         show24Item = item("24-Hour Clock", #selector(toggle24Hour))
         menu.addItem(show24Item)
         showElapsedItem = item("Show Time Sitting", #selector(toggleShowElapsed))
@@ -203,6 +242,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         autoMuteItem.state = model.autoMuteInCalls ? .on : .off
         show24Item.state = model.use24Hour ? .on : .off
         showElapsedItem.state = model.showElapsed ? .on : .off
+        showDepletionItem.state = model.showDepletion ? .on : .off
+        calmItem.state = model.calmMode ? .on : .off
         loginItem.state = (SMAppService.mainApp.status == .enabled) ? .on : .off
     }
 
@@ -227,6 +268,19 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         model.themeIndex = sender.tag
         sender.menu?.items.forEach { $0.state = ($0.tag == sender.tag) ? .on : .off }
     }
+
+    @objc private func setDepletionStyle(_ sender: NSMenuItem) {
+        model.depletionStyleRaw = sender.tag
+        sender.menu?.items.forEach { $0.state = ($0.tag == sender.tag) ? .on : .off }
+    }
+
+    @objc private func setNumberVisibility(_ sender: NSMenuItem) {
+        model.numberVisibilityRaw = sender.tag
+        sender.menu?.items.forEach { $0.state = ($0.tag == sender.tag) ? .on : .off }
+    }
+
+    @objc private func toggleDepletion() { model.showDepletion.toggle() }
+    @objc private func toggleCalm() { model.calmMode.toggle() }
 
     @objc private func startFocus(_ sender: NSMenuItem) { model.startFocus(minutes: sender.tag) }
     @objc private func stopFocusAction() { model.stopFocus() }

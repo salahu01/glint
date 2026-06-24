@@ -33,6 +33,21 @@ enum FlashIntensity: Int, CaseIterable {
     var label: String { [Self.subtle: "Subtle", .normal: "Normal", .strong: "Strong"][self]! }
 }
 
+/// Which numerals the face shows. Time Timer research: pure visual depletion
+/// (no numbers) is easier to *feel* for time-blind users.
+enum NumberVisibility: Int, CaseIterable {
+    case full, hideSeconds, hideAll
+    var label: String {
+        [Self.full: "Full", .hideSeconds: "Hide Seconds", .hideAll: "Hide All"][self]!
+    }
+}
+
+/// How remaining time is drawn — a perimeter ring or a Time Timer-style disk.
+enum DepletionStyle: Int, CaseIterable {
+    case ring, disk
+    var label: String { [Self.ring: "Ring", .disk: "Disk"][self]! }
+}
+
 /// Holds the current time, user preferences (persisted), and the session timer.
 final class ClockModel: ObservableObject {
     @Published var date = Date()
@@ -46,8 +61,14 @@ final class ClockModel: ObservableObject {
     @Published var autoMuteInCalls: Bool      { didSet { save() } }
     @Published var showElapsed: Bool          { didSet { save() } }
     @Published var themeIndex: Int            { didSet { save() } }
+    @Published var showDepletion: Bool        { didSet { save() } }
+    @Published var numberVisibilityRaw: Int   { didSet { save() } }
+    @Published var depletionStyleRaw: Int     { didSet { save() } }
+    @Published var calmMode: Bool             { didSet { save() } }
 
     var theme: ClockTheme { clockThemes[min(max(0, themeIndex), clockThemes.count - 1)] }
+    var numberVisibility: NumberVisibility { NumberVisibility(rawValue: numberVisibilityRaw) ?? .full }
+    var depletionStyle: DepletionStyle { DepletionStyle(rawValue: depletionStyleRaw) ?? .ring }
 
     // MARK: Animation triggers (view watches these)
     @Published var minuteTick = 0
@@ -63,6 +84,7 @@ final class ClockModel: ObservableObject {
     @Published var focusRemaining = ""
     @Published var focusEndedTick = 0
     var focusActive: Bool { focusEnd != nil }
+    private(set) var focusTotalSeconds: Double = 0
 
     // MARK: Call state (for auto-mute)
     @Published var callActive = false
@@ -83,6 +105,10 @@ final class ClockModel: ObservableObject {
         autoMuteInCalls = d.bool(forKey: "autoMuteInCalls")
         showElapsed = d.bool(forKey: "showElapsed")
         themeIndex = d.integer(forKey: "themeIndex")
+        showDepletion = d.bool(forKey: "showDepletion")
+        numberVisibilityRaw = d.integer(forKey: "numberVisibility")
+        depletionStyleRaw = d.integer(forKey: "depletionStyle")
+        calmMode = d.bool(forKey: "calmMode")
         loaded = true
         updateElapsed()
     }
@@ -97,6 +123,10 @@ final class ClockModel: ObservableObject {
         defaults.set(autoMuteInCalls, forKey: "autoMuteInCalls")
         defaults.set(showElapsed, forKey: "showElapsed")
         defaults.set(themeIndex, forKey: "themeIndex")
+        defaults.set(showDepletion, forKey: "showDepletion")
+        defaults.set(numberVisibilityRaw, forKey: "numberVisibility")
+        defaults.set(depletionStyleRaw, forKey: "depletionStyle")
+        defaults.set(calmMode, forKey: "calmMode")
     }
 
     func resetSession() {
@@ -112,13 +142,15 @@ final class ClockModel: ObservableObject {
     }
 
     func startFocus(minutes: Int) {
-        focusEnd = Date().addingTimeInterval(Double(minutes * 60))
+        focusTotalSeconds = Double(minutes * 60)
+        focusEnd = Date().addingTimeInterval(focusTotalSeconds)
         _ = updateFocus()
     }
 
     func stopFocus() {
         focusEnd = nil
         focusRemaining = ""
+        focusTotalSeconds = 0
     }
 
     /// Refresh the focus countdown string. Returns true if it just hit zero.
