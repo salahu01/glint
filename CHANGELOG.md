@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.5.0] - 2026-06-25
+
+### Added
+- **Stopwatch** — a manual count-up timer with Start / Pause / Resume / Reset
+  from the *Stopwatch* menu, displayed on the clock face (priority: focus
+  countdown → stopwatch → time sitting).
+
 ## [1.4.0] - 2026-06-24
 
 Inspired by [Time Timer's research](https://www.timetimer.com/pages/research):
@@ -74,7 +81,8 @@ First public release. 🎉
 - Launcher / app icon.
 - `make-app.sh` to build and ad-hoc sign a double-clickable `Glint.app`.
 
-[Unreleased]: https://github.com/salahu01/glint/compare/v1.4.0...HEAD
+[Unreleased]: https://github.com/salahu01/glint/compare/v1.5.0...HEAD
+[1.5.0]: https://github.com/salahu01/glint/releases/tag/v1.5.0
 [1.4.0]: https://github.com/salahu01/glint/releases/tag/v1.4.0
 [1.3.0]: https://github.com/salahu01/glint/releases/tag/v1.3.0
 [1.2.0]: https://github.com/salahu01/glint/releases/tag/v1.2.0

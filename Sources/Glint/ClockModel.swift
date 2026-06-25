@@ -86,6 +86,13 @@ final class ClockModel: ObservableObject {
     var focusActive: Bool { focusEnd != nil }
     private(set) var focusTotalSeconds: Double = 0
 
+    // MARK: Stopwatch (manual count-up)
+    @Published var stopwatchRunning = false
+    @Published var stopwatchText = ""
+    private var stopwatchAccumulated: TimeInterval = 0
+    private var stopwatchStart: Date?
+    var stopwatchActive: Bool { stopwatchRunning || stopwatchAccumulated > 0 }
+
     // MARK: Call state (for auto-mute)
     @Published var callActive = false
 
@@ -151,6 +158,44 @@ final class ClockModel: ObservableObject {
         focusEnd = nil
         focusRemaining = ""
         focusTotalSeconds = 0
+    }
+
+    // MARK: Stopwatch controls
+
+    func startStopwatch() {
+        guard !stopwatchRunning else { return }
+        stopwatchStart = Date()
+        stopwatchRunning = true
+        updateStopwatch()
+    }
+
+    func pauseStopwatch() {
+        guard stopwatchRunning, let start = stopwatchStart else { return }
+        stopwatchAccumulated += Date().timeIntervalSince(start)
+        stopwatchStart = nil
+        stopwatchRunning = false
+        updateStopwatch()
+    }
+
+    func toggleStopwatch() {
+        stopwatchRunning ? pauseStopwatch() : startStopwatch()
+    }
+
+    func resetStopwatch() {
+        stopwatchRunning = false
+        stopwatchStart = nil
+        stopwatchAccumulated = 0
+        stopwatchText = ""
+    }
+
+    func updateStopwatch() {
+        let elapsed = stopwatchAccumulated
+            + (stopwatchRunning ? Date().timeIntervalSince(stopwatchStart ?? Date()) : 0)
+        let t = max(0, Int(elapsed))
+        let h = t / 3600, m = (t % 3600) / 60, s = t % 60
+        stopwatchText = h > 0
+            ? String(format: "%d:%02d:%02d", h, m, s)
+            : String(format: "%d:%02d", m, s)
     }
 
     /// Refresh the focus countdown string. Returns true if it just hit zero.

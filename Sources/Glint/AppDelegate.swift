@@ -22,6 +22,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     private var showElapsedItem: NSMenuItem!
     private var showDepletionItem: NSMenuItem!
     private var calmItem: NSMenuItem!
+    private var stopwatchToggleItem: NSMenuItem!
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         buildPanel()
@@ -75,6 +76,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
             model.$depletionStyleRaw.map { _ in () }.eraseToAnyPublisher(),
             model.$showDepletion.map { _ in () }.eraseToAnyPublisher(),
             model.$focusEnd.map { $0 != nil }.removeDuplicates().map { _ in () }.eraseToAnyPublisher(),
+            model.$stopwatchText.map { $0.isEmpty }.removeDuplicates().map { _ in () }.eraseToAnyPublisher(),
         ]
         Publishers.MergeMany(triggers)
             .sink { [weak self] in
@@ -137,6 +139,15 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         let focusItem = NSMenuItem(title: "Focus Block", action: nil, keyEquivalent: "")
         focusItem.submenu = focusMenu
         menu.addItem(focusItem)
+
+        // Stopwatch submenu (manual count-up).
+        let stopwatchMenu = NSMenu()
+        stopwatchToggleItem = item("Start Stopwatch", #selector(toggleStopwatch))
+        stopwatchMenu.addItem(stopwatchToggleItem)
+        stopwatchMenu.addItem(item("Reset Stopwatch", #selector(resetStopwatch)))
+        let stopwatchItem = NSMenuItem(title: "Stopwatch", action: nil, keyEquivalent: "")
+        stopwatchItem.submenu = stopwatchMenu
+        menu.addItem(stopwatchItem)
 
         // Size submenu.
         let sizeMenu = NSMenu()
@@ -244,6 +255,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         showElapsedItem.state = model.showElapsed ? .on : .off
         showDepletionItem.state = model.showDepletion ? .on : .off
         calmItem.state = model.calmMode ? .on : .off
+        stopwatchToggleItem.title = model.stopwatchRunning
+            ? "Pause Stopwatch"
+            : (model.stopwatchActive ? "Resume Stopwatch" : "Start Stopwatch")
         loginItem.state = (SMAppService.mainApp.status == .enabled) ? .on : .off
     }
 
@@ -281,6 +295,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
     @objc private func toggleDepletion() { model.showDepletion.toggle() }
     @objc private func toggleCalm() { model.calmMode.toggle() }
+    @objc private func toggleStopwatch() { model.toggleStopwatch() }
+    @objc private func resetStopwatch() { model.resetStopwatch() }
 
     @objc private func startFocus(_ sender: NSMenuItem) { model.startFocus(minutes: sender.tag) }
     @objc private func stopFocusAction() { model.stopFocus() }
@@ -322,6 +338,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         model.date = date
         model.updateElapsed()
         if model.autoMuteInCalls { model.callActive = MicMonitor.isInputActive() }
+
+        if model.stopwatchRunning { model.updateStopwatch() }
 
         // Focus countdown: fire a finish cue the moment it hits zero.
         if model.updateFocus() {

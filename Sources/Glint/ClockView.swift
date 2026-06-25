@@ -144,6 +144,14 @@ struct ClockView: View {
                     .font(.system(size: 14 * scale, weight: .bold, design: .rounded))
                     .foregroundStyle(Color(hex: 0x7B2FF7))
                     .padding(.top, 2 * scale)
+                } else if model.stopwatchActive {
+                    HStack(spacing: 4 * scale) {
+                        Image(systemName: model.stopwatchRunning ? "stopwatch.fill" : "stopwatch")
+                        Text(model.stopwatchText).monospacedDigit()
+                    }
+                    .font(.system(size: 14 * scale, weight: .bold, design: .rounded))
+                    .foregroundStyle(Color(hex: 0x2EC4B6))
+                    .padding(.top, 2 * scale)
                 } else if model.showElapsed {
                     HStack(spacing: 4 * scale) {
                         Image(systemName: "hourglass")

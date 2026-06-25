@@ -65,6 +65,8 @@ or disk** you simply watch empty, no digits to decode.
   shoulder, the heart of staying aware of your day.
 - 🎯 **Focus blocks** — start a 25 or 50 min Pomodoro; a live countdown shows on
   the face and Glint celebrates with a blink + chime when the block ends.
+- ⏱️ **Stopwatch** — a manual count-up timer (start / pause / resume / reset)
+  shown right on the clock face.
 - ⏳ **"Time sitting"** — optional readout of how long you've been at it this
   session, with a one-click reset.
 - 📞 **Auto-mute in calls** — silences ticking while your mic is in use, so it
@@ -131,6 +133,7 @@ in the menu bar**:
 | Move the clock | Drag it anywhere on screen |
 | Set a time-check nudge | Menu → *Nudge Me Every* → 15 / 25 / 30 / 60 min |
 | Start a focus block | Menu → *Focus Block* → Start 25 / 50 min (countdown on the face) |
+| Stopwatch | Menu → *Stopwatch* → Start/Pause · Reset (count-up on the face) |
 | Show / reset "time sitting" | Menu → *Show Time Sitting* · *Reset Session Timer* |
 | 24-hour clock | Menu → *24-Hour Clock* |
 | Size / flash strength | Menu → *Clock Size* · *Flash Intensity* |
