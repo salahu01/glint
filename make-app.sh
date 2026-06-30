@@ -28,8 +28,8 @@ cat > "${BUNDLE}/Contents/Info.plist" <<PLIST
     <key>CFBundleName</key>            <string>${APP_NAME}</string>
     <key>CFBundleDisplayName</key>     <string>Glint</string>
     <key>CFBundleIdentifier</key>      <string>com.salahu01.glint</string>
-    <key>CFBundleVersion</key>         <string>1.5.0</string>
-    <key>CFBundleShortVersionString</key><string>1.5.0</string>
+    <key>CFBundleVersion</key>         <string>1.6.0</string>
+    <key>CFBundleShortVersionString</key><string>1.6.0</string>
     <key>CFBundlePackageType</key>     <string>APPL</string>
     <key>CFBundleExecutable</key>      <string>${APP_NAME}</string>
     <key>CFBundleIconFile</key>        <string>Glint</string>

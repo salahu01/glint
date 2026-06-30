@@ -65,6 +65,7 @@ final class ClockModel: ObservableObject {
     @Published var numberVisibilityRaw: Int   { didSet { save() } }
     @Published var depletionStyleRaw: Int     { didSet { save() } }
     @Published var calmMode: Bool             { didSet { save() } }
+    @Published var timeTimerMode: Bool        { didSet { save() } }
 
     var theme: ClockTheme { clockThemes[min(max(0, themeIndex), clockThemes.count - 1)] }
     var numberVisibility: NumberVisibility { NumberVisibility(rawValue: numberVisibilityRaw) ?? .full }
@@ -116,6 +117,7 @@ final class ClockModel: ObservableObject {
         numberVisibilityRaw = d.integer(forKey: "numberVisibility")
         depletionStyleRaw = d.integer(forKey: "depletionStyle")
         calmMode = d.bool(forKey: "calmMode")
+        timeTimerMode = d.bool(forKey: "timeTimerMode")
         loaded = true
         updateElapsed()
     }
@@ -134,6 +136,7 @@ final class ClockModel: ObservableObject {
         defaults.set(numberVisibilityRaw, forKey: "numberVisibility")
         defaults.set(depletionStyleRaw, forKey: "depletionStyle")
         defaults.set(calmMode, forKey: "calmMode")
+        defaults.set(timeTimerMode, forKey: "timeTimerMode")
     }
 
     func resetSession() {

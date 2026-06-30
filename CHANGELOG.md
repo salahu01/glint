@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.6.0] - 2026-06-30
+
+### Added
+- **Time Timer Mode** — *Time Timer Mode* turns the whole face into a faithful
+  Time Timer dial: a white case with a red disk that depletes toward 0 at the
+  top, a 0–55 minute number ring, tick marks, and a pointer hand. It depletes
+  over the active focus block, else the nudge interval, else the hour.
+
 ## [1.5.0] - 2026-06-25
 
 ### Added
@@ -81,7 +89,8 @@ First public release. 🎉
 - Launcher / app icon.
 - `make-app.sh` to build and ad-hoc sign a double-clickable `Glint.app`.
 
-[Unreleased]: https://github.com/salahu01/glint/compare/v1.5.0...HEAD
+[Unreleased]: https://github.com/salahu01/glint/compare/v1.6.0...HEAD
+[1.6.0]: https://github.com/salahu01/glint/releases/tag/v1.6.0
 [1.5.0]: https://github.com/salahu01/glint/releases/tag/v1.5.0
 [1.4.0]: https://github.com/salahu01/glint/releases/tag/v1.4.0
 [1.3.0]: https://github.com/salahu01/glint/releases/tag/v1.3.0

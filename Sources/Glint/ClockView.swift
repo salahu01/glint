@@ -106,9 +106,17 @@ struct ClockView: View {
     }
 
     var body: some View {
+        if model.timeTimerMode {
+            TimeTimerFace(fraction: fractionRemaining, size: 230 * scale)
+        } else {
+            normalCard
+        }
+    }
+
+    private var normalCard: some View {
         let shape = RoundedRectangle(cornerRadius: 20, style: .continuous)
 
-        VStack(spacing: 0) {
+        return VStack(spacing: 0) {
             // Top: hours and minutes (hidden only in Hide All).
             if model.numberVisibility != .hideAll {
                 Text((model.use24Hour ? Self.hourMinute24 : Self.hourMinute12).string(from: model.date))

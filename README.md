@@ -75,6 +75,9 @@ or disk** you simply watch empty, no digits to decode.
 - ⏲️ **Visual time depletion** — a shrinking **ring** around the card or a Time
   Timer-style **disk** that empties over your focus block, nudge interval, or
   the hour. You *see* time run out instead of reading digits.
+- 🔴 **Time Timer Mode** — the whole face becomes a faithful Time Timer dial:
+  white case, red disk depleting toward 0, a 0–55 minute ring, tick marks and a
+  pointer hand. Pure, number-light, glanceable time.
 - 🔢 **Number-display modes** — Full, Hide Seconds, or Hide All (pure visual,
   number-free — easiest to *feel* for time-blind users).
 - 🧘 **Calm Mode** — swaps the alarm-style bursts for gentle depletion, to lower
@@ -142,6 +145,7 @@ in the menu bar**:
 | Depletion shape | Menu → *Depletion Style* → Ring / Disk |
 | Hide numerals | Menu → *Number Display* → Full / Hide Seconds / Hide All |
 | Calm (low-anxiety) mode | Menu → *Calm Mode* |
+| Time Timer dial | Menu → *Time Timer Mode* |
 | Auto-mute during calls | Menu → *Auto-Mute in Calls* |
 | Launch at login | Menu → *Launch at Login* |
 | Mute / unmute ticking | Menu → *Mute Ticking* (⌘M) |

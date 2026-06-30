@@ -22,6 +22,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     private var showElapsedItem: NSMenuItem!
     private var showDepletionItem: NSMenuItem!
     private var calmItem: NSMenuItem!
+    private var timeTimerItem: NSMenuItem!
     private var stopwatchToggleItem: NSMenuItem!
 
     func applicationDidFinishLaunching(_ notification: Notification) {
@@ -77,6 +78,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
             model.$showDepletion.map { _ in () }.eraseToAnyPublisher(),
             model.$focusEnd.map { $0 != nil }.removeDuplicates().map { _ in () }.eraseToAnyPublisher(),
             model.$stopwatchText.map { $0.isEmpty }.removeDuplicates().map { _ in () }.eraseToAnyPublisher(),
+            model.$timeTimerMode.map { _ in () }.eraseToAnyPublisher(),
         ]
         Publishers.MergeMany(triggers)
             .sink { [weak self] in
@@ -219,6 +221,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
         calmItem = item("Calm Mode", #selector(toggleCalm))
         menu.addItem(calmItem)
+        timeTimerItem = item("Time Timer Mode", #selector(toggleTimeTimer))
+        menu.addItem(timeTimerItem)
         menu.addItem(.separator())
 
         show24Item = item("24-Hour Clock", #selector(toggle24Hour))
@@ -255,6 +259,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         showElapsedItem.state = model.showElapsed ? .on : .off
         showDepletionItem.state = model.showDepletion ? .on : .off
         calmItem.state = model.calmMode ? .on : .off
+        timeTimerItem.state = model.timeTimerMode ? .on : .off
         stopwatchToggleItem.title = model.stopwatchRunning
             ? "Pause Stopwatch"
             : (model.stopwatchActive ? "Resume Stopwatch" : "Start Stopwatch")
@@ -295,6 +300,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
     @objc private func toggleDepletion() { model.showDepletion.toggle() }
     @objc private func toggleCalm() { model.calmMode.toggle() }
+    @objc private func toggleTimeTimer() { model.timeTimerMode.toggle() }
     @objc private func toggleStopwatch() { model.toggleStopwatch() }
     @objc private func resetStopwatch() { model.resetStopwatch() }
 
