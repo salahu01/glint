@@ -3,8 +3,13 @@
 Marketing site for [Glint](https://github.com/salahu01/glint-app), the always-on-top Mac clock that flashes
 when a minute or hour changes. Live at **https://salahu01.github.io/glint/**.
 
-Next.js static export with a live, in-browser replica of the Glint clock (buildup wash, minute/hour/nudge
-flashes, ring and dial faces, all five themes and synthesised tick sound).
+A scroll-driven motion showreel (Next.js static export, GSAP ScrollTrigger + SplitText, Lenis):
+a live in-browser Glint clock in the hero, a time-lapse that scrubs 9:00 → 12:47 as you scroll,
+one card morphing through the five states, a horizontal feature reel, a desktop showcase,
+and a closing dial that depletes into the CTA. Respects `prefers-reduced-motion`; full-screen
+flashes are throttled to one per 1.5 s.
+
+Motion lives in `components/Showreel.tsx`; all copy is plain HTML in `app/page.tsx`.
 
 ```bash
 npm install
