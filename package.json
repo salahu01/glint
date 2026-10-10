@@ -1,0 +1,28 @@
+{
+  "name": "glint-site",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Website for Glint, a free open-source macOS clock that floats above every window and flashes when the minute or hour changes, for people who lose track of time.",
+  "license": "MIT",
+  "author": "Muhammed Swalahudheen C V",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "typecheck": "tsc --noEmit",
+    "deploy": "bash scripts/deploy_pages.sh"
+  },
+  "dependencies": {
+    "next": "16.3.8",
+    "react": "19.2.8",
+    "react-dom": "19.2.8"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "typescript": "^5"
+  },
+  "engines": {
+    "node": ">=20.9"
+  }
+}
