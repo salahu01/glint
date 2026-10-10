@@ -1,0 +1,58 @@
+# Glint
+
+> Glint is a free, open-source macOS clock for people who lose track of time. It floats above every window and full-screen app, ticks like a real clock, and flashes when a minute or hour changes, with interval nudges, focus blocks and a visual time-depletion dial.
+
+- Platform: macOS 13 Ventura or later · Apple silicon & Intel
+- Price: free, open source (MIT)
+- Latest version: 1.6.1
+- Download: https://github.com/salahu01/glint-app/releases/latest
+- Source code: https://github.com/salahu01/glint-app
+- Privacy: works offline, no network requests, no analytics, no account
+
+## How it signals time
+- Calm (:00 – :49): Deep base colour, glowing digits, a soft tick and tock every second.
+- Buildup (:50 – :59): A warm amber-to-red wash fades in: a change is coming.
+- Minute (every minute): A teal burst and a single chime. Another minute, gone.
+- Hour (every hour): A bigger orange-to-magenta burst and a double chime.
+- Nudge (your interval): A violet blink and a triple chime: time check, maybe a break.
+
+## Features
+- Always on top, every Space: A borderless floating panel that rides over every window and full-screen app, like picture-in-picture.
+- A clock you can hear: Real tick and tock every second, chimes on the minute and hour. All sound is synthesised in code.
+- Interval nudges: Every 15, 25, 30 or 60 minutes Glint blinks and chimes: a deliberate time check.
+- Focus blocks: Start a 25 or 50 minute block. A live countdown sits on the face and Glint celebrates when it ends.
+- Stopwatch: Start, pause, resume and reset a count-up timer right on the clock face.
+- Time sitting: See how long you've been at it this session, with a one-click reset.
+- Visual time depletion: A shrinking ring or emptying disk shows time running out. You see it instead of reading digits.
+- Dial Mode: The whole face becomes a red-disk dial with a 0–55 minute ring. Pure, glanceable, number-light time.
+- Auto-mute in calls: Ticking goes quiet while your mic is in use. No microphone permission: it only reads device state.
+- Calm Mode: Swaps the alarm-style bursts for gentle depletion, so you stay aware without the anxiety.
+- Five colour themes: Indigo, Midnight, Forest, Slate and Crimson. Three sizes, three flash strengths, 12 or 24 hour.
+- Launch at login: One toggle and Glint is always there. Drag it to any corner; it remembers everything.
+
+## FAQ
+### What is Glint?
+Glint is a free, open-source macOS clock for people who lose track of time. It floats above every window, ticks like a real mechanical clock, and flashes in bold colour when a minute or hour changes, so you feel time passing without having to remember to look.
+
+### Does Glint help with time blindness or ADHD?
+Glint was built for people who look up and realise hours have vanished, including many people with ADHD or time blindness. It makes time ambient: a warm wash before each minute ends, a flash and chime when it changes, interval nudges, and a visual depletion dial inspired by research on number-free timers. It is a tool, not a medical treatment.
+
+### Is Glint free?
+Yes. Glint is completely free and open source under the MIT licence. No ads, subscriptions, in-app purchases or accounts.
+
+### Which Macs and macOS versions does Glint support?
+Glint runs on macOS 13 Ventura and newer, on both Apple silicon and Intel Macs. The download is a universal app of about 3.5 MB.
+
+### Will the ticking get into my video calls?
+Not if you turn on Auto-Mute in Calls. Glint silences itself while your microphone is in use. It checks only whether the input device is running, so it needs no microphone permission and never hears anything. You can also mute ticking any time with ⌘M.
+
+### Can Glint work as a Pomodoro or focus timer?
+Yes. Start a 25 or 50 minute focus block from the menu bar. The countdown shows on the clock face, the depletion ring or dial empties as you go, and Glint blinks and chimes when the block ends.
+
+### Does Glint collect any data?
+No. Glint makes no network requests and has no analytics or accounts. Its only stored data is your preferences, kept on your Mac.
+
+### Why does macOS warn me the first time I open it?
+Glint isn't notarised by Apple yet, which needs a paid developer account. Right-click Glint in Applications → Open → Open, once. On macOS 15 and later you may need System Settings → Privacy & Security → Open Anyway. The source code is public, so you can also build it yourself.
+
+- [Website](https://salahu01.github.io/glint/)
